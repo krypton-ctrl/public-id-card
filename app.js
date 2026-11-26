@@ -19,6 +19,7 @@ const cardScreen = $('#card-screen');
 const cardItems = $('#card-items');
 const hideBtn = $('#toggle-hide');
 
+const MAX_ITEMS = 4;
 const NAMES = { id: 'תעודת זהות', phone: 'טלפון', address: 'כתובת' };
 const NUMERIC = { id: true, phone: true };
 
@@ -90,7 +91,19 @@ function readForm() {
   return { kind: k, name, value };
 }
 
+function atLimit() {
+  return editingIndex < 0 && items.length >= MAX_ITEMS;
+}
+
+// בארבעה פריטים חוסמים את הטופס, אלא אם עורכים פריט קיים
+function updateLimit() {
+  const full = atLimit();
+  [kind, customName, valueInput, keyboardBtn, addBtn].forEach((e) => { e.disabled = full; });
+  $('#limit-msg').hidden = !full;
+}
+
 function addOrUpdate() {
+  if (atLimit()) return false;
   const item = readForm();
   if (!item) return false;
   if (editingIndex >= 0) items[editingIndex] = item;
@@ -126,6 +139,7 @@ function removeItem(i) {
 }
 
 function renderList() {
+  updateLimit();
   itemsBox.replaceChildren();
   listTitle.hidden = items.length === 0;
   items.forEach((it, i) => {
@@ -144,14 +158,25 @@ function renderList() {
 // ---------- הכרטיס ----------
 function renderCard() {
   cardItems.replaceChildren();
-  for (const it of items) {
-    const box = el('div', { class: 'c-item' });
-    const shown = valuesHidden ? '•'.repeat([...it.value].length) : it.value;
-    box.append(el('div', { class: 'c-label' }, it.name), el('div', { class: 'c-value', dir: 'auto' }, shown));
-    cardItems.append(box);
+  // עד 2 פריטים בטור אחד; 3-4 פריטים: הראשון והשני בטור הימני, השאר בטור השמאלי
+  const columns = items.length <= 2 ? [items] : [items.slice(0, 2), items.slice(2)];
+  for (const colItems of columns) {
+    const col = el('div', { class: 'c-col' });
+    for (const it of colItems) {
+      const box = el('div', { class: 'c-item' });
+      const shown = valuesHidden ? '•'.repeat([...it.value].length) : it.value;
+      box.append(el('div', { class: 'c-label' }, it.name), el('div', { class: 'c-value', dir: 'auto' }, shown));
+      col.append(box);
+    }
+    cardItems.append(col);
   }
   hideBtn.textContent = valuesHidden ? 'הצגה' : 'הסתרה';
   fitCard();
+}
+
+function cardOverflows() {
+  if (cardItems.scrollWidth > cardItems.clientWidth + 1) return true;
+  return [...cardItems.children].some((c) => c.scrollHeight > c.clientHeight + 1 || c.scrollWidth > c.clientWidth + 1);
 }
 
 // מגדיל את הטקסט כמה שאפשר בלי לחרוג מהכרטיס
@@ -159,9 +184,11 @@ function fitCard() {
   if (cardScreen.hidden) return;
   const h = cardItems.clientHeight;
   const w = cardItems.clientWidth;
-  let size = Math.max(14, Math.min(h / (items.length * 2), w / 7, 110));
+  const cols = items.length <= 2 ? 1 : 2;
+  const rows = Math.min(items.length, 2);
+  let size = Math.max(14, Math.min(h / (rows * 2.6), w / (cols * 7), 110));
   cardItems.style.setProperty('--v', size + 'px');
-  for (let i = 0; i < 80 && size > 12 && (cardItems.scrollHeight > h + 1 || cardItems.scrollWidth > w + 1); i++) {
+  for (let i = 0; i < 80 && size > 12 && cardOverflows(); i++) {
     size *= 0.94;
     cardItems.style.setProperty('--v', size + 'px');
   }

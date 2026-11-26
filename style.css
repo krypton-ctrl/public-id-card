@@ -64,6 +64,8 @@ button.small { min-height: 40px; padding: 8px 12px; font-size: .95rem; margin-to
 .row > * { flex: 1; }
 
 .error { color: var(--error); min-height: 1.45em; margin: 10px 0 0; }
+.limit { color: #ffd27a; margin: 10px 0 0; }
+select:disabled, input:disabled, button:disabled { opacity: .5; cursor: default; }
 
 /* רשימת הפריטים במסך המילוי */
 .item {
@@ -107,19 +109,26 @@ button.small { min-height: 40px; padding: 8px 12px; font-size: .95rem; margin-to
   }
 }
 
+/* עד 2 פריטים: טור אחד. 3-4 פריטים: שני טורים עם רווח ביניהם, כמו שני עמודים */
 .card-items {
   --v: 48px;
   flex: 1;
   min-height: 0;
   overflow: hidden;
   display: flex;
+  gap: calc(var(--v) * 1.4);
+}
+.c-col {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: calc(var(--v) * .35);
+  gap: calc(var(--v) * .6);
 }
-.c-item { border-bottom: 2px solid #e3e7ee; padding-bottom: calc(var(--v) * .2); }
-.c-item:last-child { border-bottom: 0; }
-.c-label { font-size: calc(var(--v) * .45); color: #4a5568; font-weight: 600; }
+.c-item { text-align: center; }
+.c-label { font-size: calc(var(--v) * .65); line-height: 1.2; color: #4a5568; font-weight: 700; }
 .c-value {
   font-size: var(--v);
   font-weight: 800;
@@ -128,7 +137,7 @@ button.small { min-height: 40px; padding: 8px 12px; font-size: .95rem; margin-to
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
   unicode-bidi: plaintext;
-  text-align: right;
+  text-align: center;
 }
 
 .card-actions { display: flex; gap: 10px; margin-top: 10px; }
