@@ -18,98 +18,50 @@
 </head>
 <body>
 <main>
+  <h1>כרטיס פרטים</h1>
+  <p class="sub">מקלידים פרט, מציגים אותו לפקיד ומוחקים. שום דבר לא נשמר בטלפון.</p>
 
-  <section class="screen" id="screen-fatal" hidden>
-    <h1>כרטיס פרטים</h1>
-    <p class="error" id="fatal-text"></p>
-  </section>
+  <label for="title-input">כותרת (לא חובה)</label>
+  <input id="title-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="למשל: ת.ז.">
 
-  <section class="screen" id="screen-pin" hidden>
-    <h1 id="pin-title">כרטיס פרטים</h1>
-    <p class="sub" id="pin-sub"></p>
-    <form id="pin-form" autocomplete="off">
-      <label for="pin-new">קוד (לפחות 6 ספרות)</label>
-      <input id="pin-new" type="password" inputmode="numeric" autocomplete="off" required>
-      <label for="pin-confirm">אותו קוד שוב</label>
-      <input id="pin-confirm" type="password" inputmode="numeric" autocomplete="off" required>
-      <p class="error" id="pin-error" role="alert"></p>
-      <button type="submit" id="pin-submit" class="wide">שמירת הקוד</button>
-      <button type="button" id="pin-cancel" class="secondary wide" hidden>ביטול</button>
-    </form>
-  </section>
+  <label for="value-input">הפרט</label>
+  <input id="value-input" type="password" dir="ltr" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="row tight">
+    <button type="button" id="toggle-visible" class="secondary small">הצגת ההקלדה</button>
+    <button type="button" id="toggle-keyboard" class="secondary small">מקלדת אותיות</button>
+  </div>
 
-  <section class="screen" id="screen-lock" hidden>
-    <h1>כרטיס פרטים</h1>
-    <p class="sub">הכרטיס נעול.</p>
-    <form id="lock-form" autocomplete="off">
-      <label for="lock-pin">קוד</label>
-      <input id="lock-pin" type="password" inputmode="numeric" autocomplete="off" required>
-      <p class="error" id="lock-error" role="alert"></p>
-      <button type="submit" id="lock-submit" class="wide">פתיחה</button>
-    </form>
-    <button type="button" id="bio-unlock" class="secondary wide" hidden>פתיחה בטביעת אצבע או בזיהוי פנים</button>
-    <button type="button" id="forgot" class="link">שכחתי את הקוד</button>
-  </section>
+  <label for="show-last">ספרות גלויות לפני החזקת האצבע</label>
+  <select id="show-last">
+    <option value="0" selected>הכול מוסתר</option>
+    <option value="2">2 אחרונות גלויות</option>
+    <option value="3">3 אחרונות גלויות</option>
+    <option value="4">4 אחרונות גלויות</option>
+  </select>
 
-  <section class="screen" id="screen-card" hidden>
-    <div class="topbar">
-      <h1>הפרטים שלי</h1>
-      <button type="button" id="lock-now" class="secondary small">נעילה</button>
-    </div>
-    <p class="sub">לוחצים על פרט כדי להציג אותו לפקיד.</p>
-    <div id="fields"></div>
-    <div class="row">
-      <button type="button" id="edit-open" class="secondary">עריכה</button>
-      <button type="button" id="settings-open" class="secondary">הגדרות</button>
-    </div>
-  </section>
+  <p class="error" id="error" role="alert"></p>
 
-  <section class="screen" id="screen-edit" hidden>
-    <h1>עריכת פרטים</h1>
-    <p class="sub">בכל פרט אפשר לבחור כמה ספרות אחרונות יוצגו לפני שמחזיקים את האצבע.</p>
-    <div id="editors"></div>
-    <button type="button" id="add-field" class="secondary wide">הוספת פרט</button>
-    <label for="notes-input">פתק חופשי</label>
-    <textarea id="notes-input" dir="auto"></textarea>
-    <div class="row">
-      <button type="button" id="save-edit">שמירה</button>
-      <button type="button" id="cancel-edit" class="secondary">ביטול</button>
-    </div>
-  </section>
+  <div class="row">
+    <button type="button" id="show-btn">הצגה</button>
+    <button type="button" id="clear-btn" class="danger">מחיקה</button>
+  </div>
 
-  <section class="screen" id="screen-settings" hidden>
-    <h1>הגדרות</h1>
-    <div class="panel">
-      <h2>פתיחה ביומטרית</h2>
-      <p class="sub" id="bio-status"></p>
-      <button type="button" id="bio-toggle" class="wide"></button>
-    </div>
-    <div class="panel">
-      <h2>קוד</h2>
-      <button type="button" id="pin-change" class="secondary wide">החלפת קוד</button>
-    </div>
-    <div class="panel">
-      <h2>מחיקה</h2>
-      <p class="sub">מוחק את כל הפרטים מהטלפון הזה. אי אפשר לשחזר אותם.</p>
-      <button type="button" id="wipe" class="danger wide">מחיקת כל הנתונים</button>
-    </div>
-    <button type="button" id="settings-back" class="secondary wide">חזרה</button>
-  </section>
-
+  <p class="hint">הפרט נמחק גם כשסוגרים את הדף או עוברים לאפליקציה אחרת.</p>
 </main>
 
 <div id="overlay" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="o-label">
   <div id="o-label" class="o-label"></div>
   <div id="o-area" class="o-area" tabindex="0">
-    <div id="o-value" class="o-value"></div>
+    <div id="o-value" class="o-value" dir="ltr"></div>
   </div>
   <p class="o-hint">מחזיקים את האצבע על המסגרת כדי להציג את כל הפרט</p>
-  <button type="button" id="o-close" class="wide">סגירה</button>
+  <div class="row">
+    <button type="button" id="o-back" class="secondary-light">חזרה</button>
+    <button type="button" id="o-clear" class="danger">מחיקה</button>
+  </div>
 </div>
 
-<div id="toast" class="toast" role="status" hidden></div>
-
-<noscript><p class="error">האפליקציה צריכה JavaScript כדי לעבוד.</p></noscript>
+<noscript><p class="error">הדף צריך JavaScript כדי לעבוד.</p></noscript>
 <script src="app.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 'use strict';
 
 // בכל עדכון של קבצי האפליקציה מעלים את מספר הגרסה, כדי שהטלפון יוריד את הקבצים החדשים.
-const CACHE = 'pidc-v1';
+const CACHE = 'pidc-v2';
 const FILES = [
   './',
   'index.html',
