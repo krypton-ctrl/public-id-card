@@ -1,7 +1,7 @@
 'use strict';
 
 // בכל עדכון של קבצי האפליקציה מעלים את מספר הגרסה, כדי שהטלפון יוריד את הקבצים החדשים.
-const CACHE = 'pidc-v2';
+const CACHE = 'pidc-v3';
 const FILES = [
   './',
   'index.html',
@@ -25,7 +25,17 @@ self.addEventListener('activate', (e) => {
       .then(() => self.clients.claim()));
 });
 
+// קודם מנסים מהרשת, כדי שעדכונים יופיעו מיד; בלי אינטרנט מגישים מהמטמון
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((r) => r || fetch(e.request)));
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== self.location.origin) return;
+  e.respondWith(
+    fetch(e.request)
+      .then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true })));
 });

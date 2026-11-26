@@ -17,47 +17,52 @@
 <title>כרטיס פרטים</title>
 </head>
 <body>
-<main>
+<main id="edit-screen">
   <h1>כרטיס פרטים</h1>
-  <p class="sub">מקלידים פרט, מציגים אותו לפקיד ומוחקים. שום דבר לא נשמר בטלפון.</p>
+  <p class="sub">מוסיפים פריטים, מציגים את הכרטיס לפקיד ומוחקים. שום דבר לא נשמר בטלפון.</p>
 
-  <label for="title-input">כותרת (לא חובה)</label>
-  <input id="title-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="למשל: ת.ז.">
+  <label for="kind">שם הפריט</label>
+  <select id="kind">
+    <option value="" selected disabled>בחירת פריט</option>
+    <option value="id">תעודת זהות</option>
+    <option value="phone">טלפון</option>
+    <option value="address">כתובת</option>
+    <option value="other">אחר</option>
+  </select>
 
-  <label for="value-input">הפרט</label>
-  <input id="value-input" type="password" dir="ltr" inputmode="numeric" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <div class="row tight">
-    <button type="button" id="toggle-visible" class="secondary small">הצגת ההקלדה</button>
-    <button type="button" id="toggle-keyboard" class="secondary small">מקלדת אותיות</button>
+  <div id="custom-wrap" hidden>
+    <label for="custom-name">שם לפריט</label>
+    <input id="custom-name" type="text" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="למשל: מספר לקוח">
   </div>
 
-  <label for="show-last">ספרות גלויות לפני החזקת האצבע</label>
-  <select id="show-last">
-    <option value="0" selected>הכול מוסתר</option>
-    <option value="2">2 אחרונות גלויות</option>
-    <option value="3">3 אחרונות גלויות</option>
-    <option value="4">4 אחרונות גלויות</option>
-  </select>
+  <label for="value-input">הערך</label>
+  <input id="value-input" type="text" dir="auto" enterkeyhint="done" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <button type="button" id="toggle-keyboard" class="secondary small">מקלדת אותיות</button>
 
   <p class="error" id="error" role="alert"></p>
 
   <div class="row">
-    <button type="button" id="show-btn">הצגה</button>
+    <button type="button" id="add-btn">הוספה</button>
+    <button type="button" id="cancel-edit" class="secondary" hidden>ביטול עריכה</button>
+  </div>
+
+  <h2 id="list-title" hidden>פריטים בכרטיס</h2>
+  <div id="items"></div>
+
+  <div class="row">
+    <button type="button" id="show-card">הצגת כרטיס</button>
     <button type="button" id="clear-btn" class="danger">מחיקה</button>
   </div>
 
-  <p class="hint">הפרט נמחק גם כשסוגרים את הדף או עוברים לאפליקציה אחרת.</p>
+  <p class="hint">הכול נמחק גם כשסוגרים את הדף או עוברים לאפליקציה אחרת.</p>
 </main>
 
-<div id="overlay" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="o-label">
-  <div id="o-label" class="o-label"></div>
-  <div id="o-area" class="o-area" tabindex="0">
-    <div id="o-value" class="o-value" dir="ltr"></div>
-  </div>
-  <p class="o-hint">מחזיקים את האצבע על המסגרת כדי להציג את כל הפרט</p>
-  <div class="row">
-    <button type="button" id="o-back" class="secondary-light">חזרה</button>
-    <button type="button" id="o-clear" class="danger">מחיקה</button>
+<div id="card-screen" class="stage" hidden role="dialog" aria-modal="true" aria-label="כרטיס פרטים">
+  <div id="card-items" class="card-items"></div>
+  <div class="card-actions">
+    <button type="button" id="toggle-hide">הסתרה</button>
+    <button type="button" id="back-btn" class="dark">חזרה</button>
+    <button type="button" id="card-clear" class="danger">מחיקה</button>
   </div>
 </div>
 
